@@ -1,0 +1,72 @@
+# Sistema de Búsqueda de Oportunidades - Estudios Indie y Outsourcing
+
+## Proyecto: Taller de Integración Informática
+**Estudiante:** Cristian Meza Venegas  
+**Carrera:** Ingeniería Informática  
+**Duración:** 7 semanas  
+**Fecha inicio:** Diciembre 2024  
+
+## Descripción
+Sistema automatizado de búsqueda de oportunidades laborales remotas para character artists, enfocado en estudios indie, empresas de outsourcing y startups gaming.
+
+## Objetivo
+Optimizar tiempo de búsqueda de 20-30 horas a 4-6 horas semanales mediante agregación automatizada de 6-8 plataformas especializadas.
+
+## Estado Actual
+📍 **Semana 3:** Análisis técnico de plataformas en progreso
+
+## Stack Tecnológico
+- **Backend:** Python 3.11 + Flask
+- **Scraping:** BeautifulSoup4 + Requests
+- **Base de datos:** PostgreSQL
+- **Frontend:** HTML + Tailwind CSS
+- **Hosting:** Railway.app / Render.com
+
+## Instalación
+
+### Prerrequisitos
+- Python 3.10+
+- pip
+- Git
+
+### Setup
+```bash
+# Clonar proyecto
+git clone [tu-repo]
+cd job-scraper-indie-studios
+
+# Crear entorno virtual
+python -m venv venv
+
+# Activar entorno virtual
+# Windows:
+venv\Scripts\activate
+# Mac/Linux:
+source venv/bin/activate
+
+# Instalar dependencias
+pip install -r requirements.txt
+```
+
+## Estructura del Proyecto
+```
+job-scraper-indie-studios/
+├── docs/              # Documentación técnica
+├── research/          # Análisis y pruebas
+├── scrapers/          # Módulos de scraping
+├── backend/           # API Flask (próximamente)
+├── frontend/          # Interfaz web (próximamente)
+└── database/          # Modelos y migraciones (próximamente)
+```
+
+## Cronograma
+- ✅ **Semana 1-2:** Planteamiento del problema
+- 🔄 **Semana 3:** Análisis técnico y arquitectura
+- ⏳ **Semana 4:** Backend core + scrapers
+- ⏳ **Semana 5:** API + frontend básico
+- ⏳ **Semana 6:** Notificaciones + componente educativo
+- ⏳ **Semana 7:** Refinamiento y testing
+
+## Contacto
+Cristian Meza Venegas  
+Ingeniería Informática - IACC

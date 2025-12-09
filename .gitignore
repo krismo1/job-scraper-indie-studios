@@ -1,0 +1,33 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+env/
+ENV/
+
+# IntelliJ IDEA
+.idea/
+*.iml
+*.iws
+
+# Archivos de prueba
+research/platform_tests/*.html
+research/platform_tests/*.json
+
+# Base de datos local
+*.db
+*.sqlite3
+
+# Logs
+*.log
+
+# Environment variables
+.env
+.env.local
+
+# OS
+.DS_Store
+Thumbs.db
