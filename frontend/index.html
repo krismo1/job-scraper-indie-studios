@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JobScraper - Character Artist Opportunities</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600;700&display=swap');
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Rajdhani', sans-serif;
+      background: #0f0f1e;
+      color: #fff;
+      overflow-x: hidden;
+    }
+
+    .orbitron { font-family: 'Orbitron', sans-serif; }
+
+    .bg-animated {
+      background: linear-gradient(135deg, #0f0f1e 0%, #1a1a2e 50%, #16213e 100%);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .bg-animated::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background:
+              radial-gradient(circle at 20% 50%, rgba(0, 212, 255, 0.1) 0%, transparent 50%),
+              radial-gradient(circle at 80% 80%, rgba(118, 75, 162, 0.1) 0%, transparent 50%);
+      animation: pulse 10s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 0.5; }
+      50% { opacity: 1; }
+    }
+
+    .neon-cyan {
+      color: #00d4ff;
+      text-shadow: 0 0 10px rgba(0, 212, 255, 0.8);
+    }
+
+    .neon-purple { color: #c77dff; }
+    .neon-green { color: #00ff88; }
+
+    .game-card {
+      background: linear-gradient(135deg, rgba(26, 26, 46, 0.9) 0%, rgba(22, 33, 62, 0.9) 100%);
+      border: 1px solid rgba(0, 212, 255, 0.2);
+      backdrop-filter: blur(10px);
+      transition: all 0.3s ease;
+    }
+
+    .game-card:hover {
+      transform: translateY(-5px);
+      border-color: #00d4ff;
+      box-shadow: 0 10px 40px rgba(0, 212, 255, 0.3);
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border: none;
+      padding: 12px 30px;
+      border-radius: 25px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+    }
+
+    .stat-card {
+      background: linear-gradient(135deg, rgba(0, 212, 255, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+      border-left: 4px solid #00d4ff;
+      padding: 20px;
+      border-radius: 10px;
+      transition: all 0.3s ease;
+    }
+
+    .stat-card:hover {
+      transform: scale(1.05);
+    }
+
+    .job-card {
+      background: #1a1a2e;
+      border-left: 4px solid #00d4ff;
+      border-radius: 10px;
+      padding: 25px;
+      margin: 15px 0;
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+
+    .job-card:hover {
+      transform: translateX(10px);
+      box-shadow: -5px 0 20px rgba(0, 212, 255, 0.3);
+    }
+
+    .badge {
+      padding: 5px 15px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 700;
+      display: inline-block;
+    }
+
+    .badge-entry {
+      background: #00ff88;
+      color: #000;
+    }
+
+    .badge-mid {
+      background: #0088ff;
+      color: #fff;
+    }
+
+    .loader {
+      border: 4px solid rgba(0, 212, 255, 0.1);
+      border-left-color: #00d4ff;
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.9);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal.active { display: flex; }
+
+    .modal-content {
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+      border: 2px solid #00d4ff;
+      border-radius: 15px;
+      padding: 40px;
+      max-width: 600px;
+      width: 90%;
+      animation: slideIn 0.3s ease;
+    }
+
+    @keyframes slideIn {
+      from { transform: translateY(-50px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    input, select, textarea {
+      background: rgba(26, 26, 46, 0.8);
+      border: 1px solid rgba(0, 212, 255, 0.3);
+      color: #fff;
+      padding: 12px 20px;
+      border-radius: 10px;
+      font-family: 'Rajdhani', sans-serif;
+      transition: all 0.3s ease;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      outline: none;
+      border-color: #00d4ff;
+      box-shadow: 0 0 20px rgba(0, 212, 255, 0.3);
+    }
+
+    input[type="checkbox"] {
+      width: 20px;
+      height: 20px;
+      cursor: pointer;
+      accent-color: #00d4ff;
+    }
+
+    ::-webkit-scrollbar { width: 10px; }
+    ::-webkit-scrollbar-track { background: #0f0f1e; }
+    ::-webkit-scrollbar-thumb {
+      background: linear-gradient(180deg, #00d4ff, #764ba2);
+      border-radius: 5px;
+    }
+  </style>
+</head>
+<body class="bg-animated">
+<header class="relative z-10 py-8 px-6">
+  <div class="max-w-7xl mx-auto">
+    <div class="flex items-center justify-between">
+      <div>
+        <h1 class="orbitron text-5xl font-black neon-cyan mb-2">
+          🎨 JOBSCRAPER
+        </h1>
+        <p class="text-gray-400 text-lg">
+          Character Artist Opportunities • Real-time Aggregator
+        </p>
+      </div>
+      <button id="emailSelectedBtn" class="btn-primary orbitron">
+        ✉️ EMAIL SELECTED
+      </button>
+    </div>
+    <div class="h-1 bg-gradient-to-r from-transparent via-cyan-400 to-transparent mt-6 rounded-full"></div>
+  </div>
+</header>
+
+<main class="max-w-7xl mx-auto px-6 py-8 relative z-10">
+  <div id="statsContainer" class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-10">
+    <div class="stat-card text-center">
+      <div class="loader mx-auto mb-4"></div>
+      <p class="text-gray-400">Loading...</p>
+    </div>
+  </div>
+
+  <div class="game-card rounded-2xl p-8 mb-10">
+    <h2 class="orbitron text-2xl font-bold neon-purple mb-6">
+      🎯 FILTERS & SEARCH
+    </h2>
+
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+      <div>
+        <label class="block text-gray-400 mb-2 font-semibold">Platform</label>
+        <select id="platformFilter" class="w-full">
+          <option value="">All Platforms</option>
+          <option value="ArtStation">ArtStation</option>
+          <option value="GameJobs">GameJobs</option>
+          <option value="Hitmarker">Hitmarker</option>
+        </select>
+      </div>
+
+      <div>
+        <label class="block text-gray-400 mb-2 font-semibold">Min Relevance</label>
+        <select id="relevanceFilter" class="w-full">
+          <option value="">Any</option>
+          <option value="7">7+ ⭐⭐⭐</option>
+          <option value="8">8+ ⭐⭐⭐⭐</option>
+          <option value="9">9+ ⭐⭐⭐⭐⭐</option>
+        </select>
+      </div>
+
+      <div class="flex items-center">
+        <label class="flex items-center space-x-3 cursor-pointer">
+          <input type="checkbox" id="characterOnly" class="cursor-pointer">
+          <span class="text-gray-300 font-semibold">Character Artist Only</span>
+        </label>
+      </div>
+
+      <div class="flex items-center">
+        <label class="flex items-center space-x-3 cursor-pointer">
+          <input type="checkbox" id="entryOnly" class="cursor-pointer">
+          <span class="neon-green font-semibold">Entry Level Only</span>
+        </label>
+      </div>
+    </div>
+
+    <button id="applyFiltersBtn" class="btn-primary mt-6 orbitron">
+      🔍 APPLY FILTERS
+    </button>
+  </div>
+
+  <div class="game-card rounded-2xl p-8">
+    <div class="flex items-center justify-between mb-6">
+      <h2 class="orbitron text-2xl font-bold neon-cyan">
+        🎮 AVAILABLE OPPORTUNITIES
+      </h2>
+      <div id="jobCount" class="text-gray-400 font-semibold">
+        Loading...
+      </div>
+    </div>
+
+    <div id="jobsContainer">
+      <div class="text-center py-20">
+        <div class="loader mx-auto mb-4"></div>
+        <p class="text-gray-400">Loading jobs...</p>
+      </div>
+    </div>
+  </div>
+</main>
+
+<div id="emailModal" class="modal">
+  <div class="modal-content">
+    <h2 class="orbitron text-3xl font-bold neon-cyan mb-6">
+      ✉️ SEND JOBS VIA EMAIL
+    </h2>
+
+    <form id="emailForm">
+      <div class="mb-6">
+        <label class="block text-gray-400 mb-2 font-semibold">Your Email</label>
+        <input
+                type="email"
+                id="emailInput"
+                placeholder="artist@example.com"
+                required
+                class="w-full"
+        >
+      </div>
+
+      <div class="mb-6">
+        <label class="block text-gray-400 mb-2 font-semibold">Personal Message (Optional)</label>
+        <textarea
+                id="emailMessage"
+                rows="3"
+                placeholder="Add a personal note..."
+                class="w-full"
+        ></textarea>
+      </div>
+
+      <div class="mb-6">
+        <p class="text-gray-400">
+          <span class="neon-green font-bold" id="selectedCount">0</span> jobs selected
+        </p>
+      </div>
+
+      <div class="flex gap-4">
+        <button type="submit" class="btn-primary orbitron flex-1">
+          🚀 SEND EMAIL
+        </button>
+        <button type="button" id="closeModalBtn" class="bg-gray-700 hover:bg-gray-600 text-white px-6 py-3 rounded-lg font-bold transition">
+          CANCEL
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div id="toast" class="fixed bottom-6 right-6 bg-gradient-to-r from-green-500 to-emerald-600 text-white px-6 py-4 rounded-lg shadow-2xl transform translate-y-24 transition-transform duration-300 z-50">
+  <p id="toastMessage" class="font-bold"></p>
+</div>
+
+<script>
+  // ============================================================================
+  // API BASE URL - AUTO DETECT
+  // ============================================================================
+
+  // Detectar automáticamente si estamos en local o producción
+  const API_BASE = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+          ? 'http://localhost:8000'
+          : window.location.origin; // En producción usa el mismo dominio
+
+  console.log('🌐 API Base URL:', API_BASE);
+
+  // ============================================================================
+  // STATE
+  // ============================================================================
+
+  const state = {
+    jobs: [],
+    selectedJobs: new Set(),
+    filters: {
+      platform: '',
+      characterOnly: false,
+      entryOnly: false,
+      minRelevance: null
+    }
+  };
+
+  // ============================================================================
+  // UTILITIES
+  // ============================================================================
+
+  function showToast(message, duration = 3000) {
+    const toast = document.getElementById('toast');
+    const toastMessage = document.getElementById('toastMessage');
+    toastMessage.textContent = message;
+    toast.style.transform = 'translateY(0)';
+    setTimeout(() => {
+      toast.style.transform = 'translateY(150px)';
+    }, duration);
+  }
+
+  function formatDate(isoString) {
+    if (!isoString) return 'N/A';
+    const date = new Date(isoString);
+    return date.toLocaleDateString('en-US', {
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric'
+    });
+  }
+
+  // ============================================================================
+  // API CALLS
+  // ============================================================================
+
+  async function fetchStats() {
+    try {
+      const response = await fetch(`${API_BASE}/api/stats`);
+      if (!response.ok) throw new Error('Stats fetch failed');
+      const data = await response.json();
+      renderStats(data);
+    } catch (error) {
+      console.error('Error fetching stats:', error);
+      showToast('❌ Error loading statistics');
+    }
+  }
+
+  async function fetchJobs() {
+    try {
+      const params = new URLSearchParams();
+
+      if (state.filters.platform) params.append('platform', state.filters.platform);
+      if (state.filters.characterOnly) params.append('character_only', 'true');
+      if (state.filters.entryOnly) params.append('entry_only', 'true');
+      if (state.filters.minRelevance) params.append('min_relevance', state.filters.minRelevance);
+
+      params.append('limit', '50');
+
+      const response = await fetch(`${API_BASE}/api/jobs?${params}`);
+      if (!response.ok) throw new Error('Jobs fetch failed');
+
+      const data = await response.json();
+      state.jobs = data.results;
+      renderJobs(data.results, data.total);
+    } catch (error) {
+      console.error('Error fetching jobs:', error);
+      document.getElementById('jobsContainer').innerHTML = `
+        <div class="text-center py-20">
+          <div class="text-6xl mb-4">❌</div>
+          <p class="text-2xl text-red-400 font-semibold">Error loading jobs</p>
+          <p class="text-gray-500 mt-2">${error.message}</p>
+          <p class="text-gray-500 mt-4">Please check:</p>
+          <ul class="text-gray-500 mt-2 text-left max-w-md mx-auto">
+            <li>• API connection is working</li>
+            <li>• Database has jobs</li>
+            <li>• Server is running</li>
+          </ul>
+        </div>
+      `;
+      showToast('❌ Error loading jobs');
+    }
+  }
+
+  async function sendEmail(email, jobIds, message) {
+    const response = await fetch(`${API_BASE}/api/email/send`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        to_email: email,
+        job_ids: jobIds,
+        message: message || null
+      })
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.detail || 'Failed to send email');
+    }
+    return await response.json();
+  }
+
+  // ============================================================================
+  // RENDER
+  // ============================================================================
+
+  function renderStats(stats) {
+    const container = document.getElementById('statsContainer');
+    container.innerHTML = `
+      <div class="stat-card">
+        <div class="text-5xl font-black neon-cyan mb-2">${stats.total_jobs}</div>
+        <div class="text-gray-400 font-semibold">Total Jobs</div>
+      </div>
+      <div class="stat-card">
+        <div class="text-5xl font-black neon-purple mb-2">${stats.character_artists}</div>
+        <div class="text-gray-400 font-semibold">Character Artists</div>
+      </div>
+      <div class="stat-card">
+        <div class="text-5xl font-black neon-green mb-2">${stats.entry_level}</div>
+        <div class="text-gray-400 font-semibold">Entry Level</div>
+      </div>
+      <div class="stat-card">
+        <div class="text-5xl font-black text-yellow-400 mb-2">${Object.keys(stats.by_platform).length}</div>
+        <div class="text-gray-400 font-semibold">Platforms</div>
+      </div>
+    `;
+  }
+
+  function renderJobs(jobs, total) {
+    const container = document.getElementById('jobsContainer');
+    const countEl = document.getElementById('jobCount');
+
+    countEl.textContent = `${total} opportunities found`;
+
+    if (jobs.length === 0) {
+      container.innerHTML = `
+        <div class="text-center py-20">
+          <div class="text-6xl mb-4">🔍</div>
+          <p class="text-2xl text-gray-400 font-semibold">No jobs found</p>
+          <p class="text-gray-500 mt-2">Try adjusting your filters</p>
+        </div>
+      `;
+      return;
+    }
+
+    container.innerHTML = jobs.map(job => {
+      const isSelected = state.selectedJobs.has(job.id);
+      const levelBadge = job.is_entry_level
+              ? '<span class="badge badge-entry">🟢 ENTRY</span>'
+              : '<span class="badge badge-mid">🔵 MID/SR</span>';
+
+      return `
+        <div class="job-card ${isSelected ? 'border-green-400' : ''}" data-job-id="${job.id}">
+          <div class="flex items-start justify-between mb-4">
+            <div class="flex-1">
+              <div class="flex items-center gap-3 mb-3">
+                <input
+                  type="checkbox"
+                  class="job-checkbox"
+                  data-job-id="${job.id}"
+                  ${isSelected ? 'checked' : ''}
+                >
+                <h3 class="text-2xl font-bold neon-cyan">${job.title}</h3>
+              </div>
+              <div class="flex flex-wrap gap-4 text-gray-400 mb-3">
+                <span class="flex items-center gap-2">
+                  <span class="text-white font-bold">🏢</span>
+                  ${job.company}
+                </span>
+                <span class="flex items-center gap-2">
+                  <span class="text-white font-bold">📍</span>
+                  ${job.location || 'Not specified'}
+                  ${job.remote_type ? ` • <span class="neon-green">${job.remote_type}</span>` : ''}
+                </span>
+                <span class="flex items-center gap-2">
+                  <span class="text-white font-bold">🎯</span>
+                  <span class="neon-purple">${job.platform}</span>
+                </span>
+              </div>
+            </div>
+            <div class="text-right">
+              ${levelBadge}
+              <div class="mt-3 text-yellow-400 font-bold">
+                ⭐ ${job.relevance_score}/10
+              </div>
+            </div>
+          </div>
+          <div class="flex items-center justify-between pt-4 border-t border-gray-700">
+            <div class="text-sm text-gray-500">
+              Scraped: ${formatDate(job.scraped_at)}
+            </div>
+            <a
+              href="${job.url}"
+              target="_blank"
+              class="btn-primary text-sm py-2 px-5"
+              onclick="event.stopPropagation()"
+            >
+              🚀 APPLY NOW
+            </a>
+          </div>
+        </div>
+      `;
+    }).join('');
+
+    document.querySelectorAll('.job-checkbox').forEach(checkbox => {
+      checkbox.addEventListener('change', handleJobSelection);
+    });
+  }
+
+  // ============================================================================
+  // EVENT HANDLERS
+  // ============================================================================
+
+  function handleJobSelection(event) {
+    const jobId = parseInt(event.target.dataset.jobId);
+
+    if (event.target.checked) {
+      state.selectedJobs.add(jobId);
+    } else {
+      state.selectedJobs.delete(jobId);
+    }
+
+    updateSelectedCount();
+
+    const jobCard = event.target.closest('.job-card');
+    if (event.target.checked) {
+      jobCard.classList.add('border-green-400');
+    } else {
+      jobCard.classList.remove('border-green-400');
+    }
+  }
+
+  function updateSelectedCount() {
+    const count = state.selectedJobs.size;
+    document.getElementById('selectedCount').textContent = count;
+  }
+
+  function applyFilters() {
+    state.filters.platform = document.getElementById('platformFilter').value;
+    state.filters.characterOnly = document.getElementById('characterOnly').checked;
+    state.filters.entryOnly = document.getElementById('entryOnly').checked;
+    state.filters.minRelevance = document.getElementById('relevanceFilter').value || null;
+
+    fetchJobs();
+    showToast('🔍 Filters applied!');
+  }
+
+  function openEmailModal() {
+    if (state.selectedJobs.size === 0) {
+      showToast('⚠️ Please select at least one job');
+      return;
+    }
+    document.getElementById('emailModal').classList.add('active');
+  }
+
+  function closeEmailModal() {
+    document.getElementById('emailModal').classList.remove('active');
+  }
+
+  async function handleEmailSubmit(event) {
+    event.preventDefault();
+
+    const email = document.getElementById('emailInput').value;
+    const message = document.getElementById('emailMessage').value;
+    const jobIds = Array.from(state.selectedJobs);
+
+    try {
+      showToast('📧 Sending email...');
+      await sendEmail(email, jobIds, message);
+
+      closeEmailModal();
+      showToast(`✅ Email sent successfully to ${email}!`, 4000);
+
+      state.selectedJobs.clear();
+      document.querySelectorAll('.job-checkbox').forEach(cb => cb.checked = false);
+      document.querySelectorAll('.job-card').forEach(card => {
+        card.classList.remove('border-green-400');
+      });
+      updateSelectedCount();
+      document.getElementById('emailForm').reset();
+    } catch (error) {
+      showToast(`❌ ${error.message}`);
+      console.error(error);
+    }
+  }
+
+  // ============================================================================
+  // INIT
+  // ============================================================================
+
+  function init() {
+    console.log('🎮 JobScraper initialized');
+    console.log('🌐 API:', API_BASE);
+
+    fetchStats();
+    fetchJobs();
+
+    document.getElementById('applyFiltersBtn').addEventListener('click', applyFilters);
+    document.getElementById('emailSelectedBtn').addEventListener('click', openEmailModal);
+    document.getElementById('closeModalBtn').addEventListener('click', closeEmailModal);
+    document.getElementById('emailForm').addEventListener('submit', handleEmailSubmit);
+
+    document.getElementById('emailModal').addEventListener('click', (e) => {
+      if (e.target.id === 'emailModal') closeEmailModal();
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeEmailModal();
+    });
+
+    showToast('✅ JobScraper loaded!');
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+</script>
+</body>
+</html>

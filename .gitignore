@@ -4,30 +4,42 @@ __pycache__/
 *$py.class
 *.so
 .Python
-venv/
 env/
+venv/
+.venv/
 ENV/
-
-# IntelliJ IDEA
-.idea/
-*.iml
-*.iws
-
-# Archivos de prueba
-research/platform_tests/*.html
-research/platform_tests/*.json
-
-# Base de datos local
-*.db
-*.sqlite3
-
-# Logs
-*.log
+build/
+dist/
+*.egg-info/
 
 # Environment variables
 .env
 .env.local
+.env.production
+
+# IDEs
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
 
 # OS
 .DS_Store
 Thumbs.db
+
+# Logs
+*.log
+
+# Database
+*.db
+*.sqlite
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Scrapers
+screenshots/
+downloads/

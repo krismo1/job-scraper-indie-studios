@@ -1,10 +1,9 @@
 """
-Scraper de ArtStation con Playwright
+Scraper de ArtStation con Playwright + Supabase
 Proyecto: Sistema de Búsqueda Indie/Outsourcing
 Autor: Cristian Meza Venegas
 
-Este scraper usa Playwright para evitar bloqueos de ArtStation
-Enfocado en Character Artist positions, especialmente Entry Level
+VERSIÓN INTEGRADA CON PERSISTENCIA EN SUPABASE
 """
 
 import sys
@@ -18,6 +17,22 @@ from datetime import datetime
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from scraper_base import PlaywrightScraper
+
+# Imports de base de datos
+try:
+    from models import (
+        SessionLocal,
+        save_job,
+        start_job_run,
+        finish_job_run,
+    )
+
+    DB_AVAILABLE = True
+    print("✓ Módulo de base de datos cargado correctamente")
+except ImportError as e:
+    DB_AVAILABLE = False
+    print(f"⚠️  Base de datos no disponible: {e}")
+    print("   El scraper funcionará pero NO guardará en Supabase")
 
 
 class ArtStationScraper(PlaywrightScraper):
@@ -126,7 +141,6 @@ class ArtStationScraper(PlaywrightScraper):
                 return False
 
         # Si no menciona nivel específico, asumir que PODRÍA ser entry
-        # (mejor incluir y que el usuario decida)
         return True
 
     def _extract_experience_years(self, description: str) -> str:
@@ -139,7 +153,6 @@ class ArtStationScraper(PlaywrightScraper):
         Returns:
             String con años encontrados o 'Not specified'
         """
-        # Patrones comunes: "3+ years", "2-4 years", "5 years experience"
         patterns = [
             r'(\d+)\+?\s*years?',
             r'(\d+)-(\d+)\s*years?',
@@ -152,9 +165,113 @@ class ArtStationScraper(PlaywrightScraper):
 
         return 'Not specified'
 
+    def _calculate_relevance(self, is_character: bool, is_entry: bool) -> int:
+        """
+        Calcular score de relevancia (0-10)
+
+        Args:
+            is_character: Si es posición de character artist
+            is_entry: Si es entry level
+
+        Returns:
+            Score de 0-10
+        """
+        score = 0
+
+        if is_character:
+            score += 6  # Base para character artist
+
+        if is_entry:
+            score += 4  # Bonus para entry level
+
+        return score
+
+    def _to_db_job(self, raw_job: dict) -> dict:
+        """
+        Convertir job scrapeado al formato del modelo Job (Supabase)
+
+        Args:
+            raw_job: Diccionario con datos scrapeados
+
+        Returns:
+            Diccionario con formato compatible con modelo Job
+        """
+        return {
+            "platform": "ArtStation",
+            "external_id": None,
+            "url": raw_job.get("url"),
+            "title": raw_job.get("title"),
+            "company": raw_job.get("company"),
+            "location": raw_job.get("location_info"),
+            "remote_type": (
+                "Remote"
+                if "remote" in (raw_job.get("location_info") or "").lower()
+                else None
+            ),
+            "description": raw_job.get("description"),
+            "company_size": None,
+            "company_type": None,
+            "is_character_artist": raw_job.get("is_character_artist"),
+            "is_entry_level": raw_job.get("is_entry_level"),
+            "relevance_score": raw_job.get("relevance_score"),
+            "posted_date": None
+        }
+
+    def scrape_job_detail(self, raw_job: dict) -> dict:
+        """
+        FASE DETAIL: Entra al job individual y extrae descripción completa
+
+        Args:
+            raw_job: Job base con URL
+
+        Returns:
+            Job enriquecido con descripción
+        """
+        job_url = raw_job.get("url")
+
+        if not job_url or not job_url.startswith("http"):
+            print("    ⚠️  URL inválida, se omite DETAIL")
+            return raw_job
+
+        print(f"    → Visitando detalle: {job_url[:60]}...")
+
+        success = self.navigate_to(job_url)
+        if not success:
+            print("    ✗ No se pudo cargar el detalle")
+            return raw_job
+
+        time.sleep(2)
+
+        html = self.get_html()
+        soup = self.parse_html(html)
+
+        # ===== DESCRIPCIÓN =====
+        description = None
+        description_header = soup.find("h2", string="Job Description")
+
+        if description_header:
+            description_block = description_header.find_next("div")
+            if description_block:
+                description = description_block.get_text(
+                    separator="\n", strip=True
+                )
+
+        # ===== JOB DETAILS =====
+        details_text = soup.get_text(" ", strip=True)
+
+        seniority = "Junior" if "Junior" in details_text else None
+        contract_type = "Permanent" if "Permanent" in details_text else None
+
+        # ===== ACTUALIZAR RAW JOB =====
+        raw_job["description"] = description
+        raw_job["seniority"] = seniority
+        raw_job["contract_type"] = contract_type
+
+        return raw_job
+
     def scrape_jobs(self) -> list:
         """
-        Extraer trabajos de ArtStation con filtrado
+        FASE LISTADO: Extraer trabajos de ArtStation con filtrado
 
         Returns:
             Lista de diccionarios con información de trabajos
@@ -174,10 +291,10 @@ class ArtStationScraper(PlaywrightScraper):
                 return jobs
 
             print("→ Esperando carga completa de trabajos...")
-            time.sleep(4)  # Espera adicional para JS
+            time.sleep(4)
 
             print("→ Haciendo scroll para cargar más trabajos...")
-            self.scroll_page(times=3)  # Scroll extra para lazy loading
+            self.scroll_page(times=3)
 
             # Capturar screenshot
             screenshot_path = "../../research/platform_tests/artstation_playwright.png"
@@ -195,15 +312,13 @@ class ArtStationScraper(PlaywrightScraper):
                 f.write(html)
             print(f"✓ HTML guardado en: {html_path}")
 
-            # USAR SELECTORES IDENTIFICADOS DEL ANÁLISIS
+            # BUSCAR TRABAJOS
             print("\n→ Buscando trabajos con selectores identificados...")
 
-            # Selector principal basado en tu captura: .job-grid-item
             job_elements = soup.select('.job-grid-item')
 
             if not job_elements:
                 print("⚠️  No se encontró .job-grid-item, intentando selectores alternativos...")
-                # Fallbacks
                 job_elements = (
                         soup.select('[class*="job-grid"]') or
                         soup.select('article') or
@@ -212,9 +327,6 @@ class ArtStationScraper(PlaywrightScraper):
 
             if not job_elements:
                 print("❌ No se encontraron trabajos")
-                print("   → Revisa artstation_playwright.html manualmente")
-                print("   → Busca la estructura de los job items")
-
                 return [{
                     "platform": "ArtStation",
                     "status": "NO_JOBS_FOUND",
@@ -226,15 +338,12 @@ class ArtStationScraper(PlaywrightScraper):
 
             print(f"✅ Encontrados {len(job_elements)} trabajos")
 
-            # EXTRAER DATOS DE CADA TRABAJO
+            # EXTRAER DATOS
             print("\n→ Extrayendo información de trabajos...")
 
             for i, job_elem in enumerate(job_elements):
                 try:
-                    # Selectores basados en la estructura identificada
-                    # Ajusta estos según el HTML que viste
-
-                    # Título: .job-grid-item-title-holder
+                    # Título
                     title_elem = (
                             job_elem.select_one('.job-grid-item-title-holder') or
                             job_elem.select_one('h2') or
@@ -242,20 +351,20 @@ class ArtStationScraper(PlaywrightScraper):
                             job_elem.select_one('[class*="title"]')
                     )
 
-                    # Empresa: .job-grid-item-company
+                    # Empresa
                     company_elem = (
                             job_elem.select_one('.job-grid-item-company') or
                             job_elem.select_one('[class*="company"]')
                     )
 
-                    # Info adicional (ubicación, tipo): .job-grid-item-info
+                    # Info adicional
                     info_elem = job_elem.select_one('.job-grid-item-info')
                     location_info = info_elem.get_text(strip=True) if info_elem else 'N/A'
 
                     # Link al trabajo
                     link_elem = job_elem.select_one('a[href*="/jobs/"]')
 
-                    # Logo (opcional)
+                    # Logo
                     logo_elem = job_elem.select_one('.job-grid-item-logo img')
                     company_logo = logo_elem.get('src', None) if logo_elem else None
 
@@ -264,7 +373,7 @@ class ArtStationScraper(PlaywrightScraper):
                     company = company_elem.get_text(strip=True) if company_elem else 'N/A'
                     url = link_elem.get('href', 'N/A') if link_elem else 'N/A'
 
-                    # Construir URL completa si es relativa
+                    # Construir URL completa
                     if url.startswith('/jobs/'):
                         url = f"https://www.artstation.com{url}"
 
@@ -283,8 +392,6 @@ class ArtStationScraper(PlaywrightScraper):
                         'company_logo': company_logo,
                         'experience_required': experience,
                         'scraped_at': datetime.now().isoformat(),
-
-                        # Campos de filtrado
                         'is_character_artist': is_character,
                         'is_entry_level': is_entry,
                         'relevance_score': self._calculate_relevance(is_character, is_entry)
@@ -313,35 +420,15 @@ class ArtStationScraper(PlaywrightScraper):
             traceback.print_exc()
             return jobs
 
-    def _calculate_relevance(self, is_character: bool, is_entry: bool) -> int:
-        """
-        Calcular score de relevancia (0-10)
-
-        Args:
-            is_character: Si es posición de character artist
-            is_entry: Si es entry level
-
-        Returns:
-            Score de 0-10
-        """
-        score = 0
-
-        if is_character:
-            score += 6  # Base para character artist
-
-        if is_entry:
-            score += 4  # Bonus para entry level
-
-        return score
-
 
 def main():
-    """Función principal de prueba"""
+    """Función principal con integración Supabase"""
     print("\n" + "=" * 70)
     print("ARTSTATION SCRAPER - CHARACTER ARTIST ENTRY LEVEL")
     print("=" * 70)
     print(f"Fecha: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
     print(f"Objetivo: Encontrar posiciones Character Artist (Entry Level)")
+    print(f"Base de datos: {'✓ Supabase ACTIVO' if DB_AVAILABLE else '✗ Desactivada'}")
     print("=" * 70)
 
     # Ejecutar scraper
@@ -365,14 +452,48 @@ def main():
     print(f"    └─ 🔵 Mid/Senior: {len(mid_senior_jobs)}")
     print(f"  Other roles: {len(other_jobs)}")
 
-    # Ordenar por relevancia
+    # GUARDAR EN SUPABASE
+    if DB_AVAILABLE and jobs:
+        print("\n" + "=" * 70)
+        print("💾 GUARDANDO EN SUPABASE")
+        print("=" * 70)
+
+        db = SessionLocal()
+        saved_count = 0
+        updated_count = 0
+        error_count = 0
+
+        try:
+            for job in jobs:
+                # Enriquecer con descripción (opcional, comentar si es muy lento)
+                # detailed_job = scraper.scrape_job_detail(job)
+                detailed_job = job  # Sin detail por ahora
+
+                # Convertir a formato DB
+                db_job = ArtStationScraper(headless=True)._to_db_job(detailed_job)
+
+                # Guardar
+                if save_job(db, db_job):
+                    saved_count += 1
+                else:
+                    error_count += 1
+
+        except Exception as e:
+            print(f"\n❌ Error al guardar en BD: {e}")
+        finally:
+            db.close()
+
+        print(f"\n✅ Persistencia completada:")
+        print(f"   Guardados: {saved_count}")
+        print(f"   Errores: {error_count}")
+
+    # GUARDAR JSON
     character_jobs_sorted = sorted(
         character_jobs,
         key=lambda x: x.get('relevance_score', 0),
         reverse=True
     )
 
-    # GUARDAR RESULTADOS
     result = {
         'platform': 'ArtStation',
         'scrape_date': datetime.now().isoformat(),
@@ -419,35 +540,6 @@ def main():
             print(f"   🔗 URL: {job['url']}")
             print(f"   ⭐ Relevancia: {job['relevance_score']}/10")
 
-        print(f"\n✅ ÉXITO: {len(entry_jobs)} posiciones entry-level encontradas")
-
-    elif character_jobs:
-        print("\n" + "=" * 70)
-        print("ℹ️  POSICIONES CHARACTER ARTIST (Mid/Senior)")
-        print("=" * 70)
-        print(f"\n⚠️  No se encontraron posiciones Entry Level")
-        print(f"   Pero hay {len(mid_senior_jobs)} posiciones Character Artist:")
-
-        for i, job in enumerate(mid_senior_jobs[:3], 1):
-            print(f"\n{i}. {job['title']}")
-            print(f"   🏢 {job['company']}")
-            print(f"   🔗 {job['url']}")
-
-        print(f"\n💡 Considera:")
-        print(f"   - Aplicar de todas formas (algunos no son tan senior)")
-        print(f"   - Buscar en otras plataformas")
-        print(f"   - Revisar manualmente los requisitos")
-
-    else:
-        print("\n" + "=" * 70)
-        print("⚠️  NO SE ENCONTRARON POSICIONES CHARACTER ARTIST")
-        print("=" * 70)
-        print(f"\n📋 Posibles razones:")
-        print(f"   - No hay ofertas activas en este momento")
-        print(f"   - ArtStation puede tener paginación")
-        print(f"   - Necesitas hacer más scrolls")
-        print(f"   - Revisa el HTML guardado manualmente")
-
     # Archivos generados
     print("\n" + "=" * 70)
     print("📁 ARCHIVOS GENERADOS")
@@ -455,6 +547,8 @@ def main():
     print(f"  1. artstation_playwright.html (HTML completo)")
     print(f"  2. artstation_playwright.png (Screenshot)")
     print(f"  3. artstation_playwright_result.json (Datos estructurados)")
+    if DB_AVAILABLE:
+        print(f"  4. ✓ Datos guardados en Supabase")
     print("=" * 70 + "\n")
 
 
