@@ -194,7 +194,6 @@ class GameJobsScraper(PlaywrightScraper):
                         'is_entry_level': is_entry,
                         'relevance_score': self._calculate_relevance(is_character, is_entry, company),
                         'posted_date': None,
-                        'scraped_at': datetime.now().isoformat(),
                     }
 
                     jobs.append(job)

@@ -5,6 +5,7 @@ Autor: Cristian Meza Venegas
 """
 
 from sqlalchemy.exc import IntegrityError
+from sqlalchemy.orm import Session
 
 from models import (
     SessionLocal,
@@ -19,9 +20,16 @@ from scrapers.gamejobs import GameJobsScraper
 from scrapers.hitmarker import HitmarkerScraper
 
 
-def run_scraper(scraper_class, scraper_name, platform, headless=True):
-    """Ejecutar un scraper específico y guardar resultados"""
-    db = SessionLocal()
+def run_scraper(
+        scraper_class,
+        scraper_name: str,
+        platform: str,
+        headless: bool = True
+):
+    """
+    Ejecuta un scraper específico y guarda resultados en Supabase
+    """
+    db: Session = SessionLocal()
 
     job_run = start_job_run(
         db,
@@ -60,7 +68,7 @@ def run_scraper(scraper_class, scraper_name, platform, headless=True):
                 db.rollback()
                 stats["jobs_duplicated"] += 1
             except Exception as e:
-                print(f"  ⚠️  Error guardando job: {e}")
+                print(f"⚠️ Error guardando job: {e}")
                 db.rollback()
 
         finish_job_run(
@@ -100,7 +108,7 @@ def run_scraper(scraper_class, scraper_name, platform, headless=True):
         if scraper:
             try:
                 scraper.close_browser()
-            except:
+            except Exception:
                 pass
 
         db.close()
@@ -109,7 +117,9 @@ def run_scraper(scraper_class, scraper_name, platform, headless=True):
 
 
 def main():
-    """Función principal"""
+    """
+    Función principal
+    """
     print("\n" + "=" * 70)
     print("🎨 JOBSCRAPER - CHARACTER ARTIST")
     print("Plataformas: ArtStation | GameJobs | Hitmarker")
@@ -118,7 +128,7 @@ def main():
     print("🔧 Inicializando base de datos...")
     try:
         init_db()
-        print("✅ BD lista\n")
+        print("✅ Base de datos lista\n")
     except Exception as e:
         print(f"❌ Error inicializando BD: {e}")
         print("Verifica tu DATABASE_URL en el archivo .env")
@@ -137,7 +147,7 @@ def main():
             scraper_class=scraper_class,
             scraper_name=name,
             platform=platform,
-            headless=True,  # Cambiar a False si quieres ver el navegador
+            headless=True,
         )
         all_stats.append(stats)
 
@@ -145,9 +155,9 @@ def main():
     print("📊 RESUMEN FINAL")
     print("=" * 70)
 
-    total_found = 0
-    total_saved = 0
-    total_duplicated = 0
+    total_found = sum(s["jobs_found"] for s in all_stats)
+    total_saved = sum(s["jobs_saved"] for s in all_stats)
+    total_duplicated = sum(s["jobs_duplicated"] for s in all_stats)
 
     for stat in all_stats:
         icon = "✅" if stat["status"] == "success" else "❌"
@@ -158,12 +168,12 @@ def main():
             f"Duplicados: {stat['jobs_duplicated']:3d}"
         )
 
-        total_found += stat['jobs_found']
-        total_saved += stat['jobs_saved']
-        total_duplicated += stat['jobs_duplicated']
-
     print("=" * 70)
-    print(f"TOTALES: Encontrados: {total_found} | Guardados: {total_saved} | Duplicados: {total_duplicated}")
+    print(
+        f"TOTALES → Encontrados: {total_found} | "
+        f"Guardados: {total_saved} | "
+        f"Duplicados: {total_duplicated}"
+    )
     print("=" * 70 + "\n")
 
 

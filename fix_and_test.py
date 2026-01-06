@@ -1,34 +1,32 @@
 """
-Script para regenerar todos los scrapers
+Test de conexión a Supabase
 """
+from models import SessionLocal, Job
+from datetime import datetime
 
-import os
+def test_connection():
+    print("🔌 Probando conexión a Supabase...")
 
-# Crear carpeta scrapers si no existe
-os.makedirs('scrapers', exist_ok=True)
+    try:
+        db = SessionLocal()
 
-print("Regenerando scrapers...")
+        # Contar jobs
+        count = db.query(Job).count()
+        print(f"✅ Conexión exitosa!")
+        print(f"📊 Total de jobs en BD: {count}")
 
-# __init__.py
-with open('scrapers/__init__.py', 'w', encoding='utf-8') as f:
-    f.write('''"""
-Scrapers package
-"""
+        # Mostrar algunos jobs
+        jobs = db.query(Job).limit(3).all()
+        print("\n📋 Primeros 3 jobs:")
+        for job in jobs:
+            print(f"   • {job.title} - {job.company} ({job.platform})")
 
-from scrapers.artstation import ArtStationScraper
-from scrapers.gamejobs import GameJobsScraper
-from scrapers.hitmarker import HitmarkerScraper
+        db.close()
+        return True
 
-__all__ = [
-    'ArtStationScraper',
-    'GameJobsScraper',
-    'HitmarkerScraper',
-]
-''')
+    except Exception as e:
+        print(f"❌ Error: {e}")
+        return False
 
-print("✅ __init__.py creado")
-print("\nAhora copia manualmente:")
-print("1. El contenido de artstation.py")
-print("2. El contenido de gamejobs.py")
-print("3. El contenido de hitmarker.py")
-print("\nDe los artifacts que te di.")
+if __name__ == "__main__":
+    test_connection()

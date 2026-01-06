@@ -1,6 +1,6 @@
 {
   "platform": "ArtStation",
-  "scrape_date": "2026-01-02T18:23:50.459707",
+  "scrape_date": "2026-01-06T08:45:59.592128",
   "filters_applied": {
     "target_role": "Character Artist",
     "target_level": "Entry Level (preferred)",
@@ -15,22 +15,35 @@
   },
   "summary": {
     "total_scraped": 30,
-    "character_artist_total": 4,
-    "entry_level_count": 2,
-    "mid_senior_count": 2,
-    "other_roles_count": 26
+    "character_artist_total": 3,
+    "entry_level_count": 3,
+    "mid_senior_count": 0,
+    "other_roles_count": 27
   },
   "jobs": {
     "top_matches_entry_level": [
       {
         "platform": "ArtStation",
+        "title": "3D Environment Asset ArtistSanta Barbara Games",
+        "company": "Santa Barbara Games",
+        "location_info": "United States|South AmericaRemoteFreelancePosted 5 January",
+        "url": "https://www.artstation.com/jobs/c/santa-barbara-games",
+        "company_logo": "https://cdna.artstation.com/p/jobs/images/000/028/816/thumb/sb-purple-discord-512.jpg",
+        "experience_required": "Not specified",
+        "scraped_at": "2026-01-06T08:45:59.175862",
+        "is_character_artist": true,
+        "is_entry_level": true,
+        "relevance_score": 10
+      },
+      {
+        "platform": "ArtStation",
         "title": "[FULL-TIME] [Remote] 3D Artist (Stylized, Toy-Inspired) 2-Year Contract, £35,000/year ($47,000/year)Blue Pixie Studio",
         "company": "Blue Pixie Studio",
         "location_info": "Asia|Europe|North AmericaRemoteContractPosted 31 DecemberGBP £35K/ year",
         "url": "https://www.artstation.com/jobs/c/bluepixiestudio",
         "company_logo": "https://cdnb.artstation.com/p/jobs/images/000/028/809/thumb/monosnap-new-company-jpg-400x400-2024-07-22-12-32-11.jpg",
         "experience_required": "Not specified",
-        "scraped_at": "2026-01-02T18:23:49.487900",
+        "scraped_at": "2026-01-06T08:45:59.177292",
         "is_character_artist": true,
         "is_entry_level": true,
         "relevance_score": 10
@@ -43,50 +56,36 @@
         "url": "https://www.artstation.com/jobs/c/artificial-core",
         "company_logo": "https://cdna.artstation.com/p/jobs/images/000/027/628/thumb/Logo_white_400x400.jpg",
         "experience_required": "Not specified",
-        "scraped_at": "2026-01-02T18:23:49.490832",
+        "scraped_at": "2026-01-06T08:45:59.180242",
         "is_character_artist": true,
         "is_entry_level": true,
         "relevance_score": 10
       }
     ],
-    "character_artist_mid_senior": [
-      {
-        "platform": "ArtStation",
-        "title": "Lead 3D Artist / Environment / World Building / Unity3D (Remote/Permanent)beffio",
-        "company": "beffio",
-        "location_info": "Warsaw, Mazovia, Poland|Madrid, MD, Spain|Berlin, BE, GermanyRemotePermanentPosted 23 DecemberUSD $4K - 6K/ month",
-        "url": "https://www.artstation.com/jobs/c/beffio",
-        "company_logo": "https://cdna.artstation.com/p/jobs/images/000/028/566/thumb/beffio-x-logo.jpg",
-        "experience_required": "Not specified",
-        "scraped_at": "2026-01-02T18:23:49.491111",
-        "is_character_artist": true,
-        "is_entry_level": false,
-        "relevance_score": 6
-      },
-      {
-        "platform": "ArtStation",
-        "title": "3D Artist (Mid-Senior) (Remote/Permanent)beffio",
-        "company": "beffio",
-        "location_info": "Warsaw, Mazovia, Poland|Madrid, MD, Spain|Berlin, BE, GermanyRemotePermanentPosted 23 December",
-        "url": "https://www.artstation.com/jobs/c/beffio",
-        "company_logo": "https://cdna.artstation.com/p/jobs/images/000/028/460/thumb/beffio-x-logo.jpg",
-        "experience_required": "Not specified",
-        "scraped_at": "2026-01-02T18:23:49.491523",
-        "is_character_artist": true,
-        "is_entry_level": false,
-        "relevance_score": 6
-      }
-    ],
+    "character_artist_mid_senior": [],
     "all_character_artist": [
       {
         "platform": "ArtStation",
+        "title": "3D Environment Asset ArtistSanta Barbara Games",
+        "company": "Santa Barbara Games",
+        "location_info": "United States|South AmericaRemoteFreelancePosted 5 January",
+        "url": "https://www.artstation.com/jobs/c/santa-barbara-games",
+        "company_logo": "https://cdna.artstation.com/p/jobs/images/000/028/816/thumb/sb-purple-discord-512.jpg",
+        "experience_required": "Not specified",
+        "scraped_at": "2026-01-06T08:45:59.175862",
+        "is_character_artist": true,
+        "is_entry_level": true,
+        "relevance_score": 10
+      },
+      {
+        "platform": "ArtStation",
         "title": "[FULL-TIME] [Remote] 3D Artist (Stylized, Toy-Inspired) 2-Year Contract, £35,000/year ($47,000/year)Blue Pixie Studio",
         "company": "Blue Pixie Studio",
         "location_info": "Asia|Europe|North AmericaRemoteContractPosted 31 DecemberGBP £35K/ year",
         "url": "https://www.artstation.com/jobs/c/bluepixiestudio",
         "company_logo": "https://cdnb.artstation.com/p/jobs/images/000/028/809/thumb/monosnap-new-company-jpg-400x400-2024-07-22-12-32-11.jpg",
         "experience_required": "Not specified",
-        "scraped_at": "2026-01-02T18:23:49.487900",
+        "scraped_at": "2026-01-06T08:45:59.177292",
         "is_character_artist": true,
         "is_entry_level": true,
         "relevance_score": 10
@@ -99,39 +98,78 @@
         "url": "https://www.artstation.com/jobs/c/artificial-core",
         "company_logo": "https://cdna.artstation.com/p/jobs/images/000/027/628/thumb/Logo_white_400x400.jpg",
         "experience_required": "Not specified",
-        "scraped_at": "2026-01-02T18:23:49.490832",
+        "scraped_at": "2026-01-06T08:45:59.180242",
+        "is_character_artist": true,
+        "is_entry_level": true,
+        "relevance_score": 10
+      }
+    ],
+    "all_jobs": [
+      {
+        "platform": "ArtStation",
+        "title": "3D Environment Asset ArtistSanta Barbara Games",
+        "company": "Santa Barbara Games",
+        "location_info": "United States|South AmericaRemoteFreelancePosted 5 January",
+        "url": "https://www.artstation.com/jobs/c/santa-barbara-games",
+        "company_logo": "https://cdna.artstation.com/p/jobs/images/000/028/816/thumb/sb-purple-discord-512.jpg",
+        "experience_required": "Not specified",
+        "scraped_at": "2026-01-06T08:45:59.175862",
         "is_character_artist": true,
         "is_entry_level": true,
         "relevance_score": 10
       },
       {
         "platform": "ArtStation",
-        "title": "Lead 3D Artist / Environment / World Building / Unity3D (Remote/Permanent)beffio",
-        "company": "beffio",
-        "location_info": "Warsaw, Mazovia, Poland|Madrid, MD, Spain|Berlin, BE, GermanyRemotePermanentPosted 23 DecemberUSD $4K - 6K/ month",
-        "url": "https://www.artstation.com/jobs/c/beffio",
-        "company_logo": "https://cdna.artstation.com/p/jobs/images/000/028/566/thumb/beffio-x-logo.jpg",
+        "title": "Interior Designer / Spatial Concept Artist — Luxury Art Exhibition (3,000 sqm)Auroriaverse",
+        "company": "Auroriaverse",
+        "location_info": "AsiaFreelancePosted 5 January",
+        "url": "https://www.artstation.com/jobs/c/auroriaverse",
+        "company_logo": "https://cdnb.artstation.com/p/jobs/images/000/028/811/thumb/monosnap-new-company-jpg-400x400-2024-07-22-12-32-11.jpg",
         "experience_required": "Not specified",
-        "scraped_at": "2026-01-02T18:23:49.491111",
-        "is_character_artist": true,
-        "is_entry_level": false,
-        "relevance_score": 6
+        "scraped_at": "2026-01-06T08:45:59.176057",
+        "is_character_artist": false,
+        "is_entry_level": true,
+        "relevance_score": 4
       },
       {
         "platform": "ArtStation",
-        "title": "3D Artist (Mid-Senior) (Remote/Permanent)beffio",
-        "company": "beffio",
-        "location_info": "Warsaw, Mazovia, Poland|Madrid, MD, Spain|Berlin, BE, GermanyRemotePermanentPosted 23 December",
-        "url": "https://www.artstation.com/jobs/c/beffio",
-        "company_logo": "https://cdna.artstation.com/p/jobs/images/000/028/460/thumb/beffio-x-logo.jpg",
+        "title": "AnimatorAristocrat",
+        "company": "Aristocrat",
+        "location_info": "Gurgaon, BR, IndiaPermanentPosted 3 January",
+        "url": "https://www.artstation.com/jobs/c/aristocrat",
+        "company_logo": "https://cdnb.artstation.com/p/jobs/images/000/028/679/thumb/big-coin-blue-1.jpg",
         "experience_required": "Not specified",
-        "scraped_at": "2026-01-02T18:23:49.491523",
-        "is_character_artist": true,
+        "scraped_at": "2026-01-06T08:45:59.176204",
+        "is_character_artist": false,
+        "is_entry_level": true,
+        "relevance_score": 4
+      },
+      {
+        "platform": "ArtStation",
+        "title": "Outsource Lead Concept ArtistEpic Games",
+        "company": "Epic Games",
+        "location_info": "Cary, NC, USA|Seattle, WA, USA|Montreal, QC, CanadaRemotePermanentPosted 3 January",
+        "url": "https://www.artstation.com/jobs/c/epic-games",
+        "company_logo": "https://cdna.artstation.com/p/jobs/images/000/024/154/thumb/epicgames-white-final.jpg",
+        "experience_required": "Not specified",
+        "scraped_at": "2026-01-06T08:45:59.176439",
+        "is_character_artist": false,
         "is_entry_level": false,
-        "relevance_score": 6
-      }
-    ],
-    "all_jobs": [
+        "relevance_score": 0
+      },
+      {
+        "platform": "ArtStation",
+        "title": "Lead Concept ArtistEpic Games",
+        "company": "Epic Games",
+        "location_info": "Cary, NC, USA|Seattle, WA, USA|Montreal, QC, CanadaRemotePermanentPosted 3 January",
+        "url": "https://www.artstation.com/jobs/c/epic-games",
+        "company_logo": "https://cdnb.artstation.com/p/jobs/images/000/024/153/thumb/epicgames-white-final.jpg",
+        "experience_required": "Not specified",
+        "scraped_at": "2026-01-06T08:45:59.176593",
+        "is_character_artist": false,
+        "is_entry_level": false,
+        "relevance_score": 0
+      },
       {
         "platform": "ArtStation",
         "title": "Lead VFX ArtistArtificial Core",
@@ -140,7 +178,7 @@
         "url": "https://www.artstation.com/jobs/c/artificial-core",
         "company_logo": "https://cdnb.artstation.com/p/jobs/images/000/028/675/thumb/logo-white-400x400.jpg",
         "experience_required": "Not specified",
-        "scraped_at": "2026-01-02T18:23:49.487305",
+        "scraped_at": "2026-01-06T08:45:59.176746",
         "is_character_artist": false,
         "is_entry_level": false,
         "relevance_score": 0
@@ -153,7 +191,7 @@
         "url": "https://www.artstation.com/jobs/c/2k",
         "company_logo": "https://cdnb.artstation.com/p/jobs/images/000/028/299/thumb/2k-logo-red-solid-6.jpg",
         "experience_required": "Not specified",
-        "scraped_at": "2026-01-02T18:23:49.487481",
+        "scraped_at": "2026-01-06T08:45:59.176881",
         "is_character_artist": false,
         "is_entry_level": false,
         "relevance_score": 0
@@ -166,7 +204,7 @@
         "url": "https://www.artstation.com/jobs/c/2k",
         "company_logo": "https://cdnb.artstation.com/p/jobs/images/000/028/297/thumb/2k-logo-red-solid-6.jpg",
         "experience_required": "Not specified",
-        "scraped_at": "2026-01-02T18:23:49.487620",
+        "scraped_at": "2026-01-06T08:45:59.177023",
         "is_character_artist": false,
         "is_entry_level": false,
         "relevance_score": 0
@@ -179,7 +217,7 @@
         "url": "https://www.artstation.com/jobs/c/2k",
         "company_logo": "https://cdna.artstation.com/p/jobs/images/000/028/296/thumb/2k-logo-red-solid-6.jpg",
         "experience_required": "Not specified",
-        "scraped_at": "2026-01-02T18:23:49.487755",
+        "scraped_at": "2026-01-06T08:45:59.177153",
         "is_character_artist": false,
         "is_entry_level": true,
         "relevance_score": 4
@@ -192,7 +230,7 @@
         "url": "https://www.artstation.com/jobs/c/bluepixiestudio",
         "company_logo": "https://cdnb.artstation.com/p/jobs/images/000/028/809/thumb/monosnap-new-company-jpg-400x400-2024-07-22-12-32-11.jpg",
         "experience_required": "Not specified",
-        "scraped_at": "2026-01-02T18:23:49.487900",
+        "scraped_at": "2026-01-06T08:45:59.177292",
         "is_character_artist": true,
         "is_entry_level": true,
         "relevance_score": 10
@@ -205,7 +243,7 @@
         "url": "https://www.artstation.com/jobs/c/aristocrat",
         "company_logo": "https://cdna.artstation.com/p/jobs/images/000/028/484/thumb/aristocrat.jpg",
         "experience_required": "Not specified",
-        "scraped_at": "2026-01-02T18:23:49.488039",
+        "scraped_at": "2026-01-06T08:45:59.177430",
         "is_character_artist": false,
         "is_entry_level": false,
         "relevance_score": 0
@@ -218,7 +256,7 @@
         "url": "https://www.artstation.com/jobs/c/aristocrat",
         "company_logo": "https://cdnb.artstation.com/p/jobs/images/000/028/483/thumb/aristocrat.jpg",
         "experience_required": "Not specified",
-        "scraped_at": "2026-01-02T18:23:49.488174",
+        "scraped_at": "2026-01-06T08:45:59.177564",
         "is_character_artist": false,
         "is_entry_level": true,
         "relevance_score": 4
@@ -231,7 +269,7 @@
         "url": "https://www.artstation.com/jobs/c/universalcreative",
         "company_logo": "https://cdna.artstation.com/p/jobs/images/000/028/808/thumb/universalcreative-logo.jpg",
         "experience_required": "Not specified",
-        "scraped_at": "2026-01-02T18:23:49.488315",
+        "scraped_at": "2026-01-06T08:45:59.177696",
         "is_character_artist": false,
         "is_entry_level": false,
         "relevance_score": 0
@@ -244,7 +282,7 @@
         "url": "https://www.artstation.com/jobs/c/kinkoid-studio",
         "company_logo": "https://cdnb.artstation.com/p/jobs/images/000/010/149/thumb/Kinkoid_Logo.jpg",
         "experience_required": "Not specified",
-        "scraped_at": "2026-01-02T18:23:49.488448",
+        "scraped_at": "2026-01-06T08:45:59.177829",
         "is_character_artist": false,
         "is_entry_level": true,
         "relevance_score": 4
@@ -257,7 +295,7 @@
         "url": "https://www.artstation.com/jobs/c/games-workshop-2",
         "company_logo": "https://cdnb.artstation.com/p/jobs/images/000/028/807/thumb/wh-icon-white-x-400x400.jpg",
         "experience_required": "Not specified",
-        "scraped_at": "2026-01-02T18:23:49.488580",
+        "scraped_at": "2026-01-06T08:45:59.177960",
         "is_character_artist": false,
         "is_entry_level": true,
         "relevance_score": 4
@@ -270,7 +308,7 @@
         "url": "https://www.artstation.com/jobs/c/games-workshop-2",
         "company_logo": "https://cdna.artstation.com/p/jobs/images/000/028/806/thumb/wh-icon-white-x-400x400.jpg",
         "experience_required": "Not specified",
-        "scraped_at": "2026-01-02T18:23:49.488712",
+        "scraped_at": "2026-01-06T08:45:59.178091",
         "is_character_artist": false,
         "is_entry_level": true,
         "relevance_score": 4
@@ -283,7 +321,7 @@
         "url": "https://www.artstation.com/jobs/c/siendo",
         "company_logo": "https://cdnb.artstation.com/p/jobs/images/000/028/805/thumb/untitled-3.jpg",
         "experience_required": "Not specified",
-        "scraped_at": "2026-01-02T18:23:49.488864",
+        "scraped_at": "2026-01-06T08:45:59.178233",
         "is_character_artist": false,
         "is_entry_level": true,
         "relevance_score": 4
@@ -296,7 +334,7 @@
         "url": "https://www.artstation.com/jobs/c/aristocrat",
         "company_logo": "https://cdna.artstation.com/p/jobs/images/000/028/016/thumb/big-coin-blue-1.jpg",
         "experience_required": "Not specified",
-        "scraped_at": "2026-01-02T18:23:49.488996",
+        "scraped_at": "2026-01-06T08:45:59.178363",
         "is_character_artist": false,
         "is_entry_level": false,
         "relevance_score": 0
@@ -309,7 +347,7 @@
         "url": "https://www.artstation.com/jobs/c/beffio",
         "company_logo": "https://cdna.artstation.com/p/jobs/images/000/028/804/thumb/beffio-x-logo.jpg",
         "experience_required": "Not specified",
-        "scraped_at": "2026-01-02T18:23:49.489127",
+        "scraped_at": "2026-01-06T08:45:59.178496",
         "is_character_artist": false,
         "is_entry_level": false,
         "relevance_score": 0
@@ -322,7 +360,7 @@
         "url": "https://www.artstation.com/jobs/c/beffio",
         "company_logo": "https://cdnb.artstation.com/p/jobs/images/000/028/803/thumb/beffio-x-logo.jpg",
         "experience_required": "Not specified",
-        "scraped_at": "2026-01-02T18:23:49.489255",
+        "scraped_at": "2026-01-06T08:45:59.178628",
         "is_character_artist": false,
         "is_entry_level": false,
         "relevance_score": 0
@@ -335,7 +373,7 @@
         "url": "https://www.artstation.com/jobs/c/snr-interactive",
         "company_logo": "https://cdnb.artstation.com/p/jobs/images/000/028/801/thumb/chatgpt-image-21-kas-2025-03-26-43.jpg",
         "experience_required": "Not specified",
-        "scraped_at": "2026-01-02T18:23:49.489547",
+        "scraped_at": "2026-01-06T08:45:59.178964",
         "is_character_artist": false,
         "is_entry_level": true,
         "relevance_score": 4
@@ -348,7 +386,7 @@
         "url": "https://www.artstation.com/jobs/c/thepowerofthecookie",
         "company_logo": "https://cdna.artstation.com/p/jobs/images/000/028/802/thumb/cookies-logo.jpg",
         "experience_required": "Not specified",
-        "scraped_at": "2026-01-02T18:23:49.489740",
+        "scraped_at": "2026-01-06T08:45:59.179145",
         "is_character_artist": false,
         "is_entry_level": true,
         "relevance_score": 4
@@ -361,7 +399,7 @@
         "url": "https://www.artstation.com/jobs/c/xdreamrobo",
         "company_logo": "https://cdna.artstation.com/p/jobs/images/000/028/798/thumb/20251224-112803.jpg",
         "experience_required": "Not specified",
-        "scraped_at": "2026-01-02T18:23:49.489878",
+        "scraped_at": "2026-01-06T08:45:59.179285",
         "is_character_artist": false,
         "is_entry_level": true,
         "relevance_score": 4
@@ -374,7 +412,7 @@
         "url": "https://www.artstation.com/jobs/c/prisoners-of-terebellum",
         "company_logo": "https://cdnb.artstation.com/p/jobs/images/000/028/799/thumb/monosnap-new-company-jpg-400x400-2024-07-22-12-32-11.jpg",
         "experience_required": "Not specified",
-        "scraped_at": "2026-01-02T18:23:49.490023",
+        "scraped_at": "2026-01-06T08:45:59.179427",
         "is_character_artist": false,
         "is_entry_level": true,
         "relevance_score": 4
@@ -387,7 +425,7 @@
         "url": "https://www.artstation.com/jobs/c/aristocrat",
         "company_logo": "https://cdna.artstation.com/p/jobs/images/000/027/994/thumb/big-coin-blue-1.jpg",
         "experience_required": "Not specified",
-        "scraped_at": "2026-01-02T18:23:49.490156",
+        "scraped_at": "2026-01-06T08:45:59.179563",
         "is_character_artist": false,
         "is_entry_level": true,
         "relevance_score": 4
@@ -400,7 +438,7 @@
         "url": "https://www.artstation.com/jobs/c/artificial-core",
         "company_logo": "https://cdnb.artstation.com/p/jobs/images/000/027/633/thumb/Logo_white_400x400.jpg",
         "experience_required": "Not specified",
-        "scraped_at": "2026-01-02T18:23:49.490291",
+        "scraped_at": "2026-01-06T08:45:59.179696",
         "is_character_artist": false,
         "is_entry_level": true,
         "relevance_score": 4
@@ -413,7 +451,7 @@
         "url": "https://www.artstation.com/jobs/c/artificial-core",
         "company_logo": "https://cdna.artstation.com/p/jobs/images/000/027/632/thumb/Logo_white_400x400.jpg",
         "experience_required": "Not specified",
-        "scraped_at": "2026-01-02T18:23:49.490426",
+        "scraped_at": "2026-01-06T08:45:59.179829",
         "is_character_artist": false,
         "is_entry_level": true,
         "relevance_score": 4
@@ -426,7 +464,7 @@
         "url": "https://www.artstation.com/jobs/c/artificial-core",
         "company_logo": "https://cdnb.artstation.com/p/jobs/images/000/027/631/thumb/Logo_white_400x400.jpg",
         "experience_required": "Not specified",
-        "scraped_at": "2026-01-02T18:23:49.490561",
+        "scraped_at": "2026-01-06T08:45:59.179972",
         "is_character_artist": false,
         "is_entry_level": false,
         "relevance_score": 0
@@ -439,7 +477,7 @@
         "url": "https://www.artstation.com/jobs/c/artificial-core",
         "company_logo": "https://cdna.artstation.com/p/jobs/images/000/027/630/thumb/logo-white-400x400.jpg",
         "experience_required": "Not specified",
-        "scraped_at": "2026-01-02T18:23:49.490695",
+        "scraped_at": "2026-01-06T08:45:59.180109",
         "is_character_artist": false,
         "is_entry_level": true,
         "relevance_score": 4
@@ -452,75 +490,10 @@
         "url": "https://www.artstation.com/jobs/c/artificial-core",
         "company_logo": "https://cdna.artstation.com/p/jobs/images/000/027/628/thumb/Logo_white_400x400.jpg",
         "experience_required": "Not specified",
-        "scraped_at": "2026-01-02T18:23:49.490832",
+        "scraped_at": "2026-01-06T08:45:59.180242",
         "is_character_artist": true,
         "is_entry_level": true,
         "relevance_score": 10
-      },
-      {
-        "platform": "ArtStation",
-        "title": "Lead Real-Time VFX Artist – Unity3D (Remote/Permanent)beffio",
-        "company": "beffio",
-        "location_info": "Warsaw, Mazovia, Poland|Madrid, MD, Spain|Berlin, BE, GermanyRemotePermanentPosted 23 DecemberUSD $4K - 6K/ month",
-        "url": "https://www.artstation.com/jobs/c/beffio",
-        "company_logo": "https://cdnb.artstation.com/p/jobs/images/000/028/567/thumb/beffio-x-logo.jpg",
-        "experience_required": "Not specified",
-        "scraped_at": "2026-01-02T18:23:49.490976",
-        "is_character_artist": false,
-        "is_entry_level": false,
-        "relevance_score": 0
-      },
-      {
-        "platform": "ArtStation",
-        "title": "Lead 3D Artist / Environment / World Building / Unity3D (Remote/Permanent)beffio",
-        "company": "beffio",
-        "location_info": "Warsaw, Mazovia, Poland|Madrid, MD, Spain|Berlin, BE, GermanyRemotePermanentPosted 23 DecemberUSD $4K - 6K/ month",
-        "url": "https://www.artstation.com/jobs/c/beffio",
-        "company_logo": "https://cdna.artstation.com/p/jobs/images/000/028/566/thumb/beffio-x-logo.jpg",
-        "experience_required": "Not specified",
-        "scraped_at": "2026-01-02T18:23:49.491111",
-        "is_character_artist": true,
-        "is_entry_level": false,
-        "relevance_score": 6
-      },
-      {
-        "platform": "ArtStation",
-        "title": "Lead Technical Artist / Unity3D (Fully Remote/Permanent)beffio",
-        "company": "beffio",
-        "location_info": "Warsaw, Mazovia, Poland|Madrid, MD, Spain|Berlin, BE, GermanyRemotePermanentPosted 23 DecemberUSD $4K - 6K/ month",
-        "url": "https://www.artstation.com/jobs/c/beffio",
-        "company_logo": "https://cdnb.artstation.com/p/jobs/images/000/028/565/thumb/beffio-x-logo.jpg",
-        "experience_required": "Not specified",
-        "scraped_at": "2026-01-02T18:23:49.491247",
-        "is_character_artist": false,
-        "is_entry_level": false,
-        "relevance_score": 0
-      },
-      {
-        "platform": "ArtStation",
-        "title": "Lead 3D Animator (Remote/Permanent)beffio",
-        "company": "beffio",
-        "location_info": "Warsaw, Mazovia, Poland|Madrid, MD, Spain|Berlin, BE, GermanyRemotePermanentPosted 23 December",
-        "url": "https://www.artstation.com/jobs/c/beffio",
-        "company_logo": "https://cdnb.artstation.com/p/jobs/images/000/028/461/thumb/beffio-x-logo.jpg",
-        "experience_required": "Not specified",
-        "scraped_at": "2026-01-02T18:23:49.491389",
-        "is_character_artist": false,
-        "is_entry_level": false,
-        "relevance_score": 0
-      },
-      {
-        "platform": "ArtStation",
-        "title": "3D Artist (Mid-Senior) (Remote/Permanent)beffio",
-        "company": "beffio",
-        "location_info": "Warsaw, Mazovia, Poland|Madrid, MD, Spain|Berlin, BE, GermanyRemotePermanentPosted 23 December",
-        "url": "https://www.artstation.com/jobs/c/beffio",
-        "company_logo": "https://cdna.artstation.com/p/jobs/images/000/028/460/thumb/beffio-x-logo.jpg",
-        "experience_required": "Not specified",
-        "scraped_at": "2026-01-02T18:23:49.491523",
-        "is_character_artist": true,
-        "is_entry_level": false,
-        "relevance_score": 6
       }
     ]
   }

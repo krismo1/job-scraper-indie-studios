@@ -4,35 +4,57 @@ Autor: Cristian Meza Venegas
 """
 
 from datetime import datetime
+import os
+
 from sqlalchemy import (
-    Column, Integer, String, Text, DateTime, Boolean,
-    create_engine, UniqueConstraint
+    Column,
+    Integer,
+    String,
+    Text,
+    DateTime,
+    Boolean,
+    create_engine,
+    UniqueConstraint,
+    Index,
 )
 from sqlalchemy.orm import declarative_base, sessionmaker
 from sqlalchemy.exc import IntegrityError
-import os
 from dotenv import load_dotenv
-
-load_dotenv()
 
 # =========================================================
 # CONFIGURACIÓN BD
 # =========================================================
 
-# CORRECCIÓN: Leer el NOMBRE de la variable, no el valor
+load_dotenv()
+
 DATABASE_URL = os.getenv("DATABASE_URL")
-
 if not DATABASE_URL:
-    raise ValueError(
-        "DATABASE_URL no está definido. "
-        "Asegúrate de tener un archivo .env con: "
-        "DATABASE_URL=postgresql://postgres:PASSWORD@HOST:5432/postgres"
-    )
+    raise RuntimeError("❌ DATABASE_URL no está definida")
 
-engine = create_engine(DATABASE_URL, pool_pre_ping=True)
-SessionLocal = sessionmaker(bind=engine)
+engine = create_engine(
+    DATABASE_URL,
+    pool_pre_ping=True,
+)
+
+SessionLocal = sessionmaker(
+    autocommit=False,
+    autoflush=False,
+    bind=engine,
+)
 
 Base = declarative_base()
+
+# =========================================================
+# DEPENDENCIA FASTAPI - DB SESSION
+# =========================================================
+
+def get_db():
+    """Dependency para FastAPI"""
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
 
 # =========================================================
 # MODELOS
@@ -44,29 +66,41 @@ class Job(Base):
     id = Column(Integer, primary_key=True)
     platform = Column(String, nullable=False)
     external_id = Column(String, nullable=False)
+
     title = Column(String, nullable=False)
     company = Column(String)
     location = Column(String)
     remote_type = Column(String)
+
     url = Column(Text, nullable=False)
     description = Column(Text)
 
-    # Campos adicionales de Supabase
+    # Metadata empresa
     company_size = Column(String)
     company_type = Column(String)
 
-    # Campos de clasificación
+    # Clasificación
     is_character_artist = Column(Boolean, default=False)
     is_entry_level = Column(Boolean, default=False)
     relevance_score = Column(Integer, default=0)
 
-    # Metadata - Supabase usa 'updated_at'
+    # Fechas
     posted_date = Column(DateTime)
-    scraped_at = Column(DateTime)
-    updated_at = Column(DateTime, default=datetime.utcnow)
+    scraped_at = Column(DateTime, default=datetime.utcnow)
+    updated_at = Column(
+        DateTime,
+        default=datetime.utcnow,
+        onupdate=datetime.utcnow,
+    )
 
     __table_args__ = (
-        UniqueConstraint("platform", "external_id", name="uix_platform_external"),
+        UniqueConstraint(
+            "platform",
+            "external_id",
+            name="uix_platform_external",
+        ),
+        Index("idx_jobs_platform", "platform"),
+        Index("idx_jobs_external_id", "external_id"),
     )
 
 
@@ -76,10 +110,13 @@ class JobRun(Base):
     id = Column(Integer, primary_key=True)
     scraper_name = Column(String, nullable=False)
     platform = Column(String, nullable=False)
+
     status = Column(String, default="pending")
     jobs_found = Column(Integer, default=0)
     jobs_saved = Column(Integer, default=0)
+
     error_message = Column(Text)
+
     started_at = Column(DateTime, default=datetime.utcnow)
     finished_at = Column(DateTime)
 
@@ -88,7 +125,10 @@ class JobRun(Base):
 # =========================================================
 
 def init_db():
-    """Inicializar tablas"""
+    """
+    Inicializar tablas.
+    ⚠️ En producción usar migraciones (Alembic).
+    """
     Base.metadata.create_all(bind=engine)
 
 
