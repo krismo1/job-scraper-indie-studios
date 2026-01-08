@@ -1,45 +1,21 @@
 # Python
 __pycache__/
-*.py[cod]
-*$py.class
-*.so
-.Python
-env/
-venv/
+*.pyc
 .venv/
-ENV/
-build/
-dist/
 *.egg-info/
 
-# Environment variables
+# Env
 .env
 .env.local
-.env.production
+
+# Scrapers (NO subir a Railway)
+screenshots/
+downloads/
+*.log
 
 # IDEs
 .idea/
 .vscode/
-*.swp
-*.swo
-*~
 
 # OS
 .DS_Store
-Thumbs.db
-
-# Logs
-*.log
-
-# Database
-*.db
-*.sqlite
-
-# Testing
-.pytest_cache/
-.coverage
-htmlcov/
-
-# Scrapers
-screenshots/
-downloads/
