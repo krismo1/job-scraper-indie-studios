@@ -1,216 +1,182 @@
+"""
+FastAPI Application - JobScraper
+API para consultar trabajos scrapeados
+NO ejecuta scrapers (solo consulta BD)
+"""
+
+from fastapi import FastAPI, Depends, HTTPException
+from sqlalchemy.orm import Session
+from typing import List, Optional
+from datetime import datetime
+
+from models import get_db, Job, JobRun
+
 # =============================================================================
-# SCRAPING ENDPOINTS - Agregar después de los otros endpoints
+# APP INITIALIZATION
 # =============================================================================
 
-from scrapers.artstation import ArtStationScraper
-from scrapers.gamejobs import GameJobsScraper
-from scrapers.hitmarker import HitmarkerScraper
-from models import start_job_run, finish_job_run, save_job
-from sqlalchemy.exc import IntegrityError
-from pydantic import BaseModel
-from fastapi import FastAPI
-from api.routers.scrape import router as scrape_router
-from typing import List
+app = FastAPI(
+    title="JobScraper API",
+    description="API para consultar trabajos de Character Artist",
+    version="1.0.0"
+)
 
+# =============================================================================
+# HEALTH CHECK
+# =============================================================================
 
-app = FastAPI()
-
-app.include_router(scrape_router)
-
-
-
-
-class ScrapeRequest(BaseModel):
-    """Request para ejecutar scrapers"""
-    platforms: List[str] = ["ArtStation", "GameJobs", "Hitmarker"]
-    headless: bool = True
-
-class ScrapeResponse(BaseModel):
-    """Response del scraping"""
-    status: str
-    message: str
-    results: List[dict]
-
-def run_single_scraper(scraper_class, scraper_name: str, platform: str, headless: bool, db: Session):
-    """Ejecutar un scraper específico"""
-
-    job_run = start_job_run(db, scraper_name=scraper_name, platform=platform)
-
-    stats = {
-        "platform": platform,
-        "jobs_found": 0,
-        "jobs_saved": 0,
-        "jobs_duplicated": 0,
-        "status": "pending",
-        "error": None
+@app.get("/")
+def root():
+    """Health check endpoint"""
+    return {
+        "status": "ok",
+        "service": "JobScraper API",
+        "version": "1.0.0",
+        "timestamp": datetime.utcnow().isoformat()
     }
 
-    scraper = None
-
+@app.get("/health")
+def health_check(db: Session = Depends(get_db)):
+    """Detailed health check with DB connection"""
     try:
-        print(f"\n{'='*70}")
-        print(f"🚀 EJECUTANDO {scraper_name}")
-        print(f"{'='*70}")
-
-        scraper = scraper_class(headless=headless)
-        scraper.start_browser()
-
-        jobs = scraper.scrape_jobs()
-        stats["jobs_found"] = len(jobs)
-
-        print(f"💾 Guardando {len(jobs)} trabajos en base de datos...")
-
-        for job in jobs:
-            try:
-                save_job(db, scraper.to_db_job(job))
-                stats["jobs_saved"] += 1
-            except IntegrityError:
-                db.rollback()
-                stats["jobs_duplicated"] += 1
-            except Exception as e:
-                print(f"  ⚠️  Error guardando job: {e}")
-                db.rollback()
-
-        finish_job_run(
-            db,
-            job_run,
-            status="success",
-            jobs_found=stats["jobs_found"],
-            jobs_saved=stats["jobs_saved"],
-        )
-
-        stats["status"] = "success"
-
-        print(f"✅ {platform} completado")
-        print(f"   Encontrados: {stats['jobs_found']}")
-        print(f"   Guardados: {stats['jobs_saved']}")
-        print(f"   Duplicados: {stats['jobs_duplicated']}")
-
+        # Test DB connection
+        db.execute("SELECT 1")
+        return {
+            "status": "healthy",
+            "database": "connected",
+            "timestamp": datetime.utcnow().isoformat()
+        }
     except Exception as e:
-        print(f"❌ Error en {platform}: {e}")
-        import traceback
-        traceback.print_exc()
-
-        db.rollback()
-
-        finish_job_run(
-            db,
-            job_run,
-            status="error",
-            error_message=str(e),
+        raise HTTPException(
+            status_code=503,
+            detail=f"Database connection failed: {str(e)}"
         )
 
-        stats["status"] = "error"
-        stats["error"] = str(e)
+# =============================================================================
+# JOBS ENDPOINTS
+# =============================================================================
 
-    finally:
-        if scraper:
-            try:
-                scraper.close_browser()
-            except:
-                pass
-
-    return stats
-
-@app.post("/api/scrape/run", response_model=ScrapeResponse)
-async def run_scrapers(
-        request: ScrapeRequest,
-        background_tasks: BackgroundTasks,
+@app.get("/api/jobs")
+def get_jobs(
+        platform: Optional[str] = None,
+        limit: int = 100,
+        offset: int = 0,
         db: Session = Depends(get_db)
 ):
     """
-    Ejecutar scrapers seleccionados
-    
-    Plataformas disponibles:
-    - ArtStation
-    - GameJobs
-    - Hitmarker
+    Obtener lista de trabajos
+
+    - **platform**: Filtrar por plataforma (ArtStation, GameJobs, Hitmarker)
+    - **limit**: Número máximo de resultados (default: 100)
+    - **offset**: Saltar N resultados (paginación)
     """
-
-    scrapers_map = {
-        "ArtStation": (ArtStationScraper, "ArtStationScraper"),
-        "GameJobs": (GameJobsScraper, "GameJobsScraper"),
-        "Hitmarker": (HitmarkerScraper, "HitmarkerScraper"),
-    }
-
-    # Validar plataformas
-    invalid_platforms = [p for p in request.platforms if p not in scrapers_map]
-    if invalid_platforms:
-        raise HTTPException(
-            status_code=400,
-            detail=f"Invalid platforms: {invalid_platforms}. Valid: {list(scrapers_map.keys())}"
-        )
-
-    all_stats = []
-
     try:
-        for platform in request.platforms:
-            scraper_class, scraper_name = scrapers_map[platform]
+        query = db.query(Job).order_by(Job.scraped_at.desc())
 
-            stats = run_single_scraper(
-                scraper_class=scraper_class,
-                scraper_name=scraper_name,
-                platform=platform,
-                headless=request.headless,
-                db=db
-            )
+        if platform:
+            query = query.filter(Job.platform == platform)
 
-            all_stats.append(stats)
-
-        # Calcular totales
-        total_found = sum(s["jobs_found"] for s in all_stats)
-        total_saved = sum(s["jobs_saved"] for s in all_stats)
-        total_duplicated = sum(s["jobs_duplicated"] for s in all_stats)
-
-        success_count = sum(1 for s in all_stats if s["status"] == "success")
+        total = query.count()
+        jobs = query.limit(limit).offset(offset).all()
 
         return {
-            "status": "success" if success_count == len(request.platforms) else "partial",
-            "message": f"Scraping completado: {total_found} encontrados, {total_saved} guardados, {total_duplicated} duplicados",
-            "results": all_stats
-        }
-
-    except Exception as e:
-        print(f"❌ Error general en scraping: {e}")
-        import traceback
-        traceback.print_exc()
-
-        raise HTTPException(
-            status_code=500,
-            detail=f"Error ejecutando scrapers: {str(e)}"
-        )
-
-@app.get("/api/scrape/status")
-async def get_scrape_status(db: Session = Depends(get_db)):
-    """Obtener estado de los últimos scrapes"""
-    try:
-        from models import JobRun
-
-        recent_runs = db.query(JobRun).order_by(JobRun.started_at.desc()).limit(10).all()
-
-        return {
-            "recent_runs": [
+            "total": total,
+            "limit": limit,
+            "offset": offset,
+            "jobs": [
                 {
-                    "id": run.id,
+                    "id": job.id,
+                    "title": job.title,
+                    "company": job.company,
+                    "location": job.location,
+                    "remote_type": job.remote_type,
+                    "platform": job.platform,
+                    "url": job.url,
+                    "posted_date": job.posted_date.isoformat() if job.posted_date else None,
+                    "scraped_at": job.scraped_at.isoformat() if job.scraped_at else None,
+                }
+                for job in jobs
+            ]
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/api/jobs/{job_id}")
+def get_job_detail(job_id: int, db: Session = Depends(get_db)):
+    """Obtener detalle completo de un trabajo"""
+    try:
+        job = db.query(Job).filter(Job.id == job_id).first()
+
+        if not job:
+            raise HTTPException(status_code=404, detail="Job not found")
+
+        return {
+            "id": job.id,
+            "platform": job.platform,
+            "external_id": job.external_id,
+            "title": job.title,
+            "company": job.company,
+            "location": job.location,
+            "remote_type": job.remote_type,
+            "url": job.url,
+            "description": job.description,
+            "company_size": job.company_size,
+            "company_type": job.company_type,
+            "posted_date": job.posted_date.isoformat() if job.posted_date else None,
+            "scraped_at": job.scraped_at.isoformat() if job.scraped_at else None,
+        }
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+# =============================================================================
+# STATS ENDPOINTS
+# =============================================================================
+
+@app.get("/api/stats")
+def get_stats(db: Session = Depends(get_db)):
+    """Obtener estadísticas generales"""
+    try:
+        from sqlalchemy import func
+
+        total_jobs = db.query(func.count(Job.id)).scalar()
+
+        by_platform = db.query(
+            Job.platform,
+            func.count(Job.id)
+        ).group_by(Job.platform).all()
+
+        recent_scrapes = db.query(JobRun).order_by(
+            JobRun.started_at.desc()
+        ).limit(5).all()
+
+        return {
+            "total_jobs": total_jobs,
+            "by_platform": {
+                platform: count for platform, count in by_platform
+            },
+            "recent_scrapes": [
+                {
                     "platform": run.platform,
-                    "scraper_name": run.scraper_name,
                     "status": run.status,
                     "jobs_found": run.jobs_found,
                     "jobs_saved": run.jobs_saved,
                     "started_at": run.started_at.isoformat() if run.started_at else None,
-                    "finished_at": run.finished_at.isoformat() if run.finished_at else None,
-                    "error_message": run.error_message
                 }
-                for run in recent_runs
+                for run in recent_scrapes
             ]
         }
     except Exception as e:
-        print(f"Error getting scrape status: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
-@app.get("/api/scrape/platforms")
-async def get_available_platforms():
-    """Obtener plataformas disponibles para scraping"""
+# =============================================================================
+# PLATFORMS ENDPOINT
+# =============================================================================
+
+@app.get("/api/platforms")
+def get_platforms():
+    """Obtener lista de plataformas disponibles"""
     return {
         "platforms": [
             {

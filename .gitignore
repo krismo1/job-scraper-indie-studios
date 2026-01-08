@@ -2,6 +2,7 @@
 __pycache__/
 *.pyc
 .venv/
+venv/
 *.egg-info/
 
 # Env
@@ -19,3 +20,6 @@ downloads/
 
 # OS
 .DS_Store
+
+# API router antiguo (eliminar si existe)
+api/routers/scrape.py0
